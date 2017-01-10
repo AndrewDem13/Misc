@@ -1,5 +1,3 @@
-package com.javarush.test.level20.lesson10.bonus03;
-
 import java.util.ArrayList;
 import java.util.List;
 
