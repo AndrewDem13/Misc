@@ -14,7 +14,9 @@ public class TrappingWaterTest {
         assertEquals(0, TrappingWater.compute(new int[]{}));
         assertEquals(0, TrappingWater.compute(new int[]{0}));
         assertEquals(0, TrappingWater.compute(new int[]{0,1}));
+        assertEquals(0, TrappingWater.compute(new int[]{0,0}));
         assertEquals(0, TrappingWater.compute(new int[]{0,1,4}));
+        assertEquals(0, TrappingWater.compute(new int[]{423,4322,4322}));
         assertEquals(1, TrappingWater.compute(new int[]{2,1,4}));
         assertEquals(59, TrappingWater.compute(new int[]{60,1,89}));
     }
