@@ -15,7 +15,7 @@ public class TrappingWater2 {
 
         int result = 0;
 
-        // searching for left and right edge within which water can be trapped
+        // searching for global left and right edge within which water can be trapped
         int leftEdgeIndex = 0, rightEdgeIndex = array.length-1;
         while (leftEdgeIndex < rightEdgeIndex && array[leftEdgeIndex] <= array[leftEdgeIndex +1])
             leftEdgeIndex++;
