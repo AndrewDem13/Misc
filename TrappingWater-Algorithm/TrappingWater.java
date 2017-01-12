@@ -7,20 +7,18 @@ Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
  */
 
 public class TrappingWater {
-    public static void main(String[] args) {
-        int[] x = {0,1,0,2,1,0,1,3,2,1,2,1};
-        compute(x);
-    }
-
     public static int compute(int[] array) {
+        if (array.length < 3)
+            return 0;
+
         int result = 0;
         int[][] matrix = getMatrix(array);
 
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 1; x < matrix[y].length-1; x++) { // ignoring beginning and end
                 if (matrix[y][x] == 0) {
-                    if (lookRight(matrix[y], x)) { // to not iterate to the end of the line
-                        if (lookLeft(matrix[y], x))
+                    if (wallFoundRight(matrix[y], x)) { // to not iterate to the end of the line
+                        if (wallFoundLeft(matrix[y], x))
                             result++;
                     }
                     else
@@ -28,14 +26,6 @@ public class TrappingWater {
                 }
             }
         }
-
-        System.out.print("Result is: " + result);
-        /*  In matrix such this expected result is 6
-            0 0 0 0 0 0 0 3 0 0 0 0
-            0 0 0 2 0 0 0 3 2 0 2 0
-            0 1 0 2 1 0 1 3 2 1 2 1
-        */
-
         return result;
     }
 
@@ -57,7 +47,7 @@ public class TrappingWater {
         return matrix;
     }
 
-    private static boolean lookRight(int[] array, int x) {
+    private static boolean wallFoundRight(int[] array, int x) {
         for (int i = x+1; i < array.length; i++) {
             if (array[i] > array[x])
                 return true;
@@ -65,7 +55,7 @@ public class TrappingWater {
         return false;
     }
 
-    private static boolean lookLeft(int[] array, int x) {
+    private static boolean wallFoundLeft(int[] array, int x) {
         for (int i = x-1; i >= 0; i--) {
             if (array[i] > array[x])
                 return true;
