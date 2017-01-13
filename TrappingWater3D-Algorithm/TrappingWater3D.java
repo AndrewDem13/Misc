@@ -17,15 +17,17 @@ import java.util.ArrayList;
  */
 public class TrappingWater3D {
     public static void main(String[] args) {
-        int[] line1 = new int[]{5,5,5,1};
-        int[] line3 = new int[]{5,1,5,5};
-        int[] line2 = new int[]{5,1,1,5};
-        int[] line4 = new int[]{5,2,5,8};
-        int[][] map = new int[4][4];
+        int[] line1 = new int[]{12,13,1,12};
+        int[] line2 = new int[]{13,4,13,12};
+        int[] line3 = new int[]{13,8,10,12};
+        int[] line4 = new int[]{12,13,12,12};
+        int[] line5 = new int[]{13,13,13,13};
+        int[][] map = new int[5][4];
         map[0] = line1;
-        map[1] = line3;
-        map[2] = line2;
+        map[1] = line2;
+        map[2] = line3;
         map[3] = line4;
+        map[4] = line5;
         System.out.print(compute(map));
     }
     public static int compute(int[][] map) {
@@ -52,13 +54,11 @@ public class TrappingWater3D {
                     while (leftEdgeIndex < rightEdgeIndex && leftNumber > map[y][++leftEdgeIndex]) {
                         possible.add(y);
                         possible.add(leftEdgeIndex);
-                        possible.add(leftNumber-map[y][leftEdgeIndex]);
                     }
                 } else {
                     while (leftEdgeIndex < rightEdgeIndex && rightNumber > map[y][--rightEdgeIndex]) {
                         possible.add(y);
                         possible.add(rightEdgeIndex);
-                        possible.add(rightNumber-map[y][rightEdgeIndex]);
                     }
                 }
             }
@@ -68,14 +68,21 @@ public class TrappingWater3D {
         for (int i = 0; i < possible.size(); i++) {
             int currY = possible.get(i);
             int currX = possible.get(++i);
-            int currZ = possible.get(++i);
-            if (topIsBorder(possible, currY, currX, i) && map[currY-1][currX] >= map[currY][currX]) {
+            if (topIsBorder(possible, currY, currX, i)) {
                 if (map[currY-1][currX] < lowBorder)
                     lowBorder = map[currY - 1][currX];
             }
-            if (bottomIsBorder(possible, currY, currX, i) && map[currY+1][currX] >= map[currY][currX]) {
+            if (bottomIsBorder(possible, currY, currX, i)) {
                     if (map[currY+1][currX] < lowBorder)
                         lowBorder = map[currY + 1][currX];
+            }
+            if (leftIsBorder(possible, currY, currX, i)) {
+                if (map[currY][currX-1] < lowBorder)
+                    lowBorder = map[currY][currX-1];
+            }
+            if (rightIsBorder(possible, currY, currX, i)) {
+                if (map[currY][currX+1] < lowBorder)
+                    lowBorder = map[currY][currX+1];
             }
             // result += lowBorder - map[currY][currX];
             // map[currY][currX] = lowBorder;
@@ -83,24 +90,63 @@ public class TrappingWater3D {
 
         System.out.println("lowBorder: " + lowBorder);
         // calculating water
-        for (int i = 0; i < possible.size(); i+=3) {
-            if (map[possible.get(i)][possible.get(i+1)] < lowBorder)
-                result += lowBorder - map[possible.get(i)][possible.get(i+1)];
+        int futureArraySize = 0;
+        ArrayList<int[]> list = new ArrayList<>();
+        for (int i = 0; i < possible.size(); i+=2) {
+            futureArraySize++;
+            if (map[possible.get(i)][possible.get(i+1)] < lowBorder) {
+                result += lowBorder - map[possible.get(i)][possible.get(i + 1)];
+                if (possible.get(i) < futureArraySize)
+                    futureArraySize--;
+                if (list.contains(map[possible.get(i)]))
+                    list.remove(map[possible.get(i)]);
+            }
+            else
+                list.add(map[possible.get(i)]);
         }
+        System.out.println("futureArraySize " + futureArraySize);
+
+        if (futureArraySize > 2) {
+            int[][] array = new int[futureArraySize][map[0].length];
+            array[0] = map[0];
+            array[futureArraySize - 1] = map[map.length - 1];
+            for (int i = 1; i < futureArraySize - 1; i++) {
+                for (int[] a : list)
+                    array[i] = a;
+            }
+            result += compute(array);
+        }
+
         return result;
     }
 
     private static boolean bottomIsBorder(ArrayList<Integer> possible, int currY, int currX, int i) {
-        for (i++; i < possible.size(); i+=3) {
-            if (possible.get(i) == currY+1 && possible.get(i+1) == currX)
+        for (int q = 0; q < possible.size(); q+=2) {
+            if (possible.get(q) == currY+1 && possible.get(q+1) == currX)
                 return false;
         }
         return true;
     }
 
     private static boolean topIsBorder(ArrayList<Integer> possible, int currY, int currX, int i) {
-        for (int q = 0; q < i-2; q+=3) {
+        for (int q = 0; q < possible.size(); q+=2) {
             if (possible.get(q) == currY-1 && possible.get(q+1) == currX)
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean leftIsBorder(ArrayList<Integer> possible, int currY, int currX, int i) {
+        for (int q = 0; q < possible.size(); q+=2) {
+            if (possible.get(q) == currY && possible.get(q+1) == currX-1)
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean rightIsBorder(ArrayList<Integer> possible, int currY, int currX, int i) {
+        for (int q = 0; q < possible.size(); q+=2) {
+            if (possible.get(q) == currY && possible.get(q+1) == currX+1)
                 return false;
         }
         return true;
