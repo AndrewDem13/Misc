@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  Problem from: https://leetcode.com/problems/trapping-rain-water-ii/
  Given an m x n matrix of positive integers representing the height of each unit cell in a 2D elevation map,
@@ -15,48 +13,19 @@ import java.util.ArrayList;
  ]
  Return 4.
  */
-
-/**
- * То все херня собача. знач дивимся на матрицю і
- * - берем по черзі кожне число окрім країв:
- * -- перевіряєм його в 4 напрямках (спочатку краї) і повертаєм найменшого сусіда
- * --- якщо ні але сусід є краєм, то обриваємся й берем наступне число
- * --- якщо ні і сусід не край, то беремо сусіда (координати) і шукаєм його край окрім попереднього числа(РЕКУРСІЯ до --)
- * --- інакше сусіди всі більші, рахуєм воду і йдем далі
- * int[] line1 = new int[]{78,30,94,36};
- int[] line2 = new int[]{87,93,50,22}; //  impos
- int[] line3 = new int[]{63,27,91,60}; // 28 - 63(37)     // 9
- int[] line4 = new int[]{64,28,41,27}; // 27 - 41(37)     // + 10 = 19
- int[] line5 = new int[]{73,37,12,69}; // 37 (impos bc of 30), 12 - 41 (37 actually) // +25 = 44!!!
- int[] line6 = new int[]{68,30,83,31}; // 30 - 24 // impos
- int[] line7 = new int[]{63,24,68,36};
- int[][] map = new int[7][4];
- map[0] = line1;
- map[1] = line2;
- map[2] = line3;
- map[3] = line4;
- map[4] = line5;
- map[5] = line6;
- map[6] = line7;
-
- int[] line1 = new int[]{1,4,3,1,3,2};
- int[] line2 = new int[]{3,2,1,3,2,4}; //  impos
- int[] line3 = new int[]{2,3,3,2,3,1}; // 28 - 63(37)     // 9
- int[][] map = new int[3][6];
- map[0] = line1;
- map[1] = line2;
- map[2] = line3;
- */
 public class TrappingWater3D {
     public static void main(String[] args) {
-        int[] line1 = new int[]{1,4,3,1,3,2};
-        int[] line2 = new int[]{3,2,1,3,2,4}; //  impos
-        int[] line3 = new int[]{2,3,3,2,3,1}; // 28 - 63(37)     // 9
-        int[][] map = new int[3][6];
+        int[] line1 = new int[]{9,9,9,9,9};
+        int[] line2 = new int[]{9,2,1,2,9};
+        int[] line3 = new int[]{9,2,8,2,9};
+        int[] line4 = new int[]{9,2,3,2,9};
+        int[] line5 = new int[]{9,9,9,9,9};
+        int[][] map = new int[5][5];
         map[0] = line1;
         map[1] = line2;
         map[2] = line3;
-
+        map[3] = line4;
+        map[4] = line5;
         System.out.print(compute(map));
     }
 
@@ -77,7 +46,6 @@ public class TrappingWater3D {
         }
 
         int currValue;
-
         for (int y = 1; y < cellMap.length - 1; y++) {
             for (int x = 1; x < cellMap[y].length - 1; x++) {
                 currValue = cellMap[y][x].value;
@@ -85,7 +53,6 @@ public class TrappingWater3D {
                 cellMap[y][x].isVisited = true;
             }
         }
-
         return result;
     }
 
@@ -188,3 +155,46 @@ public class TrappingWater3D {
         }
     }
 }
+
+/**
+ **TESTS**
+
+ int[] line1 = new int[]{78,30,94,36};
+ int[] line2 = new int[]{87,93,50,22};
+ int[] line3 = new int[]{63,27,91,60};
+ int[] line4 = new int[]{64,28,41,27};
+ int[] line5 = new int[]{73,37,12,69};
+ int[] line6 = new int[]{68,30,83,31};
+ int[] line7 = new int[]{63,24,68,36};
+ int[][] map = new int[7][4];
+ map[0] = line1;
+ map[1] = line2;
+ map[2] = line3;
+ map[3] = line4;
+ map[4] = line5;
+ map[5] = line6;
+ map[6] = line7;
+ // Answer = 44 // Works correctly
+
+ int[] line1 = new int[]{1,4,3,1,3,2};
+ int[] line2 = new int[]{3,2,1,3,2,4};
+ int[] line3 = new int[]{2,3,3,2,3,1};
+ int[][] map = new int[3][6];
+ map[0] = line1;
+ map[1] = line2;
+ map[2] = line3;
+ // Answer = 44 // Works correctly
+
+ int[] line1 = new int[]{9,9,9,9,9};
+ int[] line2 = new int[]{9,2,1,2,9};
+ int[] line3 = new int[]{9,2,8,2,9};
+ int[] line4 = new int[]{9,2,3,2,9};
+ int[] line5 = new int[]{9,9,9,9,9};
+ int[][] map = new int[5][5];
+ map[0] = line1;
+ map[1] = line2;
+ map[2] = line3;
+ map[3] = line4;
+ map[4] = line5;
+ // CRASHES in endless recursion :(
+ */
